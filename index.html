@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kartu Ucapan — Punisa 17</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Space+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1:#101a33;
+    --bg-2:#1c2b52;
+    --paper:#faf2e2;
+    --paper-shadow:#e7dcc4;
+    --ink:#241f1a;
+    --muted:#7c7362;
+    --gold:#dd9d3f;
+    --gold-dark:#a9721f;
+    --coral:#ee6f60;
+    --teal:#3fa896;
+    --lilac:#9d8ce0;
+  }
+
+  *{box-sizing:border-box;}
+
+  html,body{
+    margin:0;
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 20% 10%, #24355e 0%, transparent 45%),
+      radial-gradient(circle at 85% 80%, #2a1f4a 0%, transparent 50%),
+      linear-gradient(160deg, var(--bg-1), var(--bg-2));
+    font-family:'Plus Jakarta Sans', sans-serif;
+    color:var(--paper);
+    overflow-x:hidden;
+  }
+
+  .stage{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:56px 20px 80px;
+  }
+
+  /* ambient confetti */
+  .ambient{position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:0;}
+  .amb-piece{
+    position:absolute;
+    top:-40px;
+    width:8px; height:14px;
+    opacity:0.55;
+    animation:fall linear infinite;
+    border-radius:2px;
+  }
+  @keyframes fall{
+    to{ transform: translateY(110vh) rotate(320deg); }
+  }
+
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    font-size:11px;
+    color:var(--gold);
+    margin-bottom:14px;
+    z-index:1;
+  }
+
+  h1{
+    font-family:'Fraunces', serif;
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size:clamp(30px, 6vw, 52px);
+    line-height:1.08;
+    text-align:center;
+    margin:0 0 10px;
+    max-width:680px;
+    z-index:1;
+  }
+  h1 em{
+    font-style:italic;
+    font-weight:400;
+    color:var(--coral);
+  }
+
+  .sub{
+    text-align:center;
+    color:#c6cde3;
+    font-size:15px;
+    max-width:460px;
+    margin:0 0 30px;
+    z-index:1;
+  }
+
+  .countdown{
+    display:flex;
+    gap:10px;
+    margin-bottom:44px;
+    z-index:1;
+  }
+  .chip{
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.14);
+    border-radius:10px;
+    padding:10px 14px;
+    min-width:64px;
+    text-align:center;
+  }
+  .chip .num{
+    font-family:'Space Mono', monospace;
+    font-size:22px;
+    font-weight:700;
+    color:var(--gold);
+    display:block;
+  }
+  .chip .lbl{
+    font-size:10px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:#9aa3c0;
+  }
+
+  /* ID card */
+  .card-wrap{
+    perspective:1400px;
+    z-index:1;
+  }
+  .card{
+    position:relative;
+    width:min(92vw, 460px);
+    background:var(--paper);
+    color:var(--ink);
+    border-radius:18px;
+    padding:26px 26px 22px;
+    box-shadow:
+      0 30px 60px -20px rgba(0,0,0,0.55),
+      0 2px 0 var(--paper-shadow) inset;
+    transform:rotate(-1.4deg);
+    animation:settle 900ms cubic-bezier(.2,.9,.25,1) both;
+  }
+  @keyframes settle{
+    from{ opacity:0; transform: rotate(-1.4deg) translateY(26px) scale(0.96);}
+    to{ opacity:1; transform: rotate(-1.4deg) translateY(0) scale(1);}
+  }
+
+  .card::before{
+    content:"";
+    position:absolute;
+    top:-9px; left:50%;
+    width:calc(100% - 18px);
+    transform:translateX(-50%);
+    border-top:2px dashed #cabb98;
+  }
+  .notch{
+    position:absolute;
+    top:-9px;
+    width:18px; height:18px;
+    background:var(--bg-2);
+    border-radius:50%;
+  }
+  .notch.left{ left:-9px; }
+  .notch.right{ right:-9px; }
+
+  .card-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:18px;
+  }
+  .card-head .doc-title{
+    font-family:'Space Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--gold-dark);
+  }
+  .card-head .doc-no{
+    font-family:'Space Mono', monospace;
+    font-size:10px;
+    color:var(--muted);
+    margin-top:4px;
+  }
+
+  .avatar{
+    width:54px; height:54px;
+    border-radius:50%;
+    background:linear-gradient(145deg, var(--coral), var(--lilac));
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces', serif;
+    font-size:24px;
+    color:#fff;
+    flex-shrink:0;
+    box-shadow:0 6px 14px rgba(0,0,0,0.18);
+  }
+
+  .fields{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:11px;
+    border-top:1px solid var(--paper-shadow);
+    border-bottom:1px solid var(--paper-shadow);
+    padding:16px 0;
+    margin-bottom:16px;
+  }
+  .field{ display:flex; gap:12px; align-items:baseline; }
+  .field .k{
+    font-family:'Space Mono', monospace;
+    font-size:10px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--muted);
+    width:104px;
+    flex-shrink:0;
+  }
+  .field .v{
+    font-size:14.5px;
+    font-weight:600;
+    color:var(--ink);
+  }
+  .field .v.small{ font-weight:500; font-size:13.5px; }
+
+  .card-foot{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    font-family:'Space Mono', monospace;
+  }
+  .card-foot .issued{
+    font-size:10.5px;
+    color:var(--muted);
+    line-height:1.5;
+  }
+  .card-foot .issued b{ color:var(--ink); font-weight:700; }
+
+  .stamp{
+    position:absolute;
+    right:22px;
+    bottom:64px;
+    width:78px; height:78px;
+    border:2.5px solid var(--coral);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+    transform:rotate(-16deg);
+    color:var(--coral);
+    font-family:'Space Mono', monospace;
+    font-size:9.5px;
+    font-weight:700;
+    letter-spacing:0.06em;
+    opacity:0.85;
+    line-height:1.25;
+    mix-blend-mode:multiply;
+  }
+
+  .actions{
+    margin-top:34px;
+    z-index:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:16px;
+  }
+  button.open-btn{
+    font-family:'Plus Jakarta Sans', sans-serif;
+    font-weight:600;
+    font-size:14.5px;
+    color:#151b2e;
+    background:var(--gold);
+    border:none;
+    padding:13px 26px;
+    border-radius:999px;
+    cursor:pointer;
+    box-shadow:0 10px 24px -8px rgba(221,157,63,0.55);
+    transition:transform 160ms ease, box-shadow 160ms ease;
+  }
+  button.open-btn:hover{ transform:translateY(-2px); box-shadow:0 14px 30px -8px rgba(221,157,63,0.7); }
+  button.open-btn:active{ transform:translateY(0); }
+  button.open-btn:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
+
+  .note{
+    max-width:440px;
+    width:min(92vw, 440px);
+    background:#fff;
+    color:var(--ink);
+    border-radius:14px;
+    padding:24px 24px;
+    font-size:14.5px;
+    line-height:1.65;
+    box-shadow:0 20px 40px -16px rgba(0,0,0,0.5);
+    display:none;
+    transform:translateY(-8px);
+  }
+  .note.show{
+    display:block;
+    animation:unfold 480ms cubic-bezier(.2,.9,.25,1) both;
+  }
+  @keyframes unfold{
+    from{ opacity:0; transform:translateY(-14px) scaleY(0.92); transform-origin:top; }
+    to{ opacity:1; transform:translateY(0) scaleY(1); transform-origin:top; }
+  }
+  .note .sig{
+    margin-top:14px;
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    color:var(--gold-dark);
+  }
+
+  .burst{ position:fixed; inset:0; pointer-events:none; z-index:5; }
+  .burst-piece{
+    position:absolute;
+    width:8px; height:12px;
+    border-radius:2px;
+    animation:burstfall 1600ms ease-out forwards;
+  }
+  @keyframes burstfall{
+    0%{ transform: translate(0,0) rotate(0deg); opacity:1; }
+    100%{ transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); opacity:0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .amb-piece, .card, .note.show, .burst-piece{ animation:none !important; }
+  }
+
+  @media (max-width:420px){
+    .field .k{ width:88px; font-size:9px; }
+    .stamp{ width:66px; height:66px; right:16px; bottom:58px; font-size:8.5px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient" id="ambient"></div>
+
+<div class="stage">
+  <div class="eyebrow">Kartu Ucapan Resmi &middot; Edisi Terbatas</div>
+  <h1>Selamat Ulang Tahun<br>ke-17, <em>Punisa</em>!</h1>
+  <p class="sub">19 Juli 2009 &mdash; 19 Juli 2026. Hari peresmian bertambah satu angka, sekaligus bukti sah bahwa dunia jadi lebih seru sejak ada Punisa di dalamnya.</p>
+
+  <div class="countdown" id="countdown">
+    <div class="chip"><span class="num" id="cd-d">00</span><span class="lbl">Hari</span></div>
+    <div class="chip"><span class="num" id="cd-h">00</span><span class="lbl">Jam</span></div>
+    <div class="chip"><span class="num" id="cd-m">00</span><span class="lbl">Menit</span></div>
+    <div class="chip"><span class="num" id="cd-s">00</span><span class="lbl">Detik</span></div>
+  </div>
+
+  <div class="card-wrap">
+    <div class="card">
+      <div class="notch left"></div>
+      <div class="notch right"></div>
+
+      <div class="card-head">
+        <div>
+          <div class="doc-title">Republik Merah Putih</div>
+          <div class="doc-no">No. Seri: 19-07-17/NR</div>
+        </div>
+        <div class="avatar">P</div>
+      </div>
+
+      <div class="fields">
+        <div class="field"><span class="k">Nama</span><span class="v">Syaffa Althafunnisa</span></div>
+        <div class="field"><span class="k">Panggilan</span><span class="v">Punisa</span></div>
+        <div class="field"><span class="k">Lahir</span><span class="v small">19 Juli 2009</span></div>
+        <div class="field"><span class="k">Usia Baru</span><span class="v">17 Tahun</span></div>
+        <div class="field"><span class="k">Status</span><span class="v small">Orang asik yang bikin hari lebih ringan</span></div>
+        <div class="field"><span class="k">Berlaku</span><span class="v small">Seumur hidup, tanpa perpanjangan</span></div>
+      </div>
+
+      <div class="card-foot">
+        <div class="issued">Diterbitkan oleh<br><b>Novanda Rameli</b></div>
+        <div class="issued" style="text-align:right;">14 Juli 2026<br>Bali</div>
+      </div>
+
+      <div class="stamp">SAH<br>&amp; DIREKOMENDASIKAN<br>JADI ??? SEUMUR<br>HIDUP</div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="open-btn" id="openBtn">Buka Pesan Khusus</button>
+    <div class="note" id="note">
+      Tujuh belas tahun bukan cuma soal nambah angka di KTP nanti. Ini juga tentang segala cerita, usaha, dan hal baik yang udah dan akan kamu lewati.
+      <br><br>
+      Semoga tahun ini penuh hal-hal yang bikin semangat balik lagi kalau lagi capek, orang-orang yang jujur dan suportif, dan semoga lolos SNBP atau mungkin SNBT? ya okelah semoga ya. Yang penting ini si jangan suka boongin orang tua (terutama mama) woi! jaga kesehatan jangan makan sembarangan. Nanti kalo semisal kita beda universe jangan lupain aku ya. Selamat ulang tahun, semoga harimu seru dari pagi sampai malam!
+      <div class="sig">&mdash; Napon</div>
+    </div>
+  </div>
+</div>
+
+<div class="burst" id="burst"></div>
+
+<script>
+  // ambient confetti
+  const colors = ['#ee6f60','#dd9d3f','#3fa896','#9d8ce0','#f2c14e'];
+  const ambient = document.getElementById('ambient');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if(!reduced){
+    for(let i=0;i<18;i++){
+      const p = document.createElement('div');
+      p.className = 'amb-piece';
+      p.style.left = Math.random()*100 + 'vw';
+      p.style.background = colors[i % colors.length];
+      p.style.animationDuration = (9 + Math.random()*8) + 's';
+      p.style.animationDelay = (Math.random()*10) + 's';
+      p.style.opacity = 0.25 + Math.random()*0.3;
+      ambient.appendChild(p);
+    }
+  }
+
+  // countdown to 19 July 2026, WIB
+  const target = new Date('2026-07-19T00:00:00+07:00').getTime();
+  function tick(){
+    const now = Date.now();
+    let diff = Math.max(0, target - now);
+    const d = Math.floor(diff / 86400000); diff -= d*86400000;
+    const h = Math.floor(diff / 3600000); diff -= h*3600000;
+    const m = Math.floor(diff / 60000); diff -= m*60000;
+    const s = Math.floor(diff / 1000);
+    document.getElementById('cd-d').textContent = String(d).padStart(2,'0');
+    document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
+    document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
+    document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // reveal note + confetti burst
+  const btn = document.getElementById('openBtn');
+  const note = document.getElementById('note');
+  const burst = document.getElementById('burst');
+
+  btn.addEventListener('click', () => {
+    const opening = !note.classList.contains('show');
+    note.classList.toggle('show');
+    btn.textContent = note.classList.contains('show') ? 'Tutup Pesan' : 'Buka Pesan Khusus';
+
+    if(opening && !reduced){
+      for(let i=0;i<40;i++){
+        const piece = document.createElement('div');
+        piece.className = 'burst-piece';
+        const originX = window.innerWidth/2 + (Math.random()-0.5)*160;
+        const originY = window.innerHeight*0.45;
+        piece.style.left = originX + 'px';
+        piece.style.top = originY + 'px';
+        piece.style.background = colors[i % colors.length];
+        const dx = (Math.random()-0.5)*500 + 'px';
+        const dy = (Math.random()*400 + 200) + 'px';
+        const rot = (Math.random()*720 - 360) + 'deg';
+        piece.style.setProperty('--dx', dx);
+        piece.style.setProperty('--dy', dy);
+        piece.style.setProperty('--rot', rot);
+        piece.style.animationDelay = (Math.random()*150) + 'ms';
+        burst.appendChild(piece);
+        setTimeout(() => piece.remove(), 2000);
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
