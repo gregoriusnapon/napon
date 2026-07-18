@@ -94,8 +94,20 @@
     z-index:1;
   }
 
+  .countdown-label{
+    font-family:'Space Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:#9aa3c0;
+    margin-bottom:10px;
+    z-index:1;
+  }
+
   .countdown{
     display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
     gap:10px;
     margin-bottom:44px;
     z-index:1;
@@ -338,7 +350,9 @@
   <h1>Selamat Ulang Tahun<br>ke-17, <em>Punisa</em>!</h1>
   <p class="sub">19 Juli 2009 &mdash; 19 Juli 2026. Hari peresmian bertambah satu angka, sekaligus bukti sah bahwa dunia jadi lebih seru sejak ada Punisa di dalamnya.</p>
 
+  <div class="countdown-label" id="countdownLabel">Sudah hidup selama</div>
   <div class="countdown" id="countdown">
+    <div class="chip"><span class="num" id="cd-y">00</span><span class="lbl">Tahun</span></div>
     <div class="chip"><span class="num" id="cd-d">00</span><span class="lbl">Hari</span></div>
     <div class="chip"><span class="num" id="cd-h">00</span><span class="lbl">Jam</span></div>
     <div class="chip"><span class="num" id="cd-m">00</span><span class="lbl">Menit</span></div>
@@ -408,15 +422,31 @@
     }
   }
 
-  // countdown to 19 July 2026, WIB
-  const target = new Date('2026-07-19T00:00:00+07:00').getTime();
+  // "sudah hidup selama": elapsed time since birth, broken into
+  // full years + days/hours/min/sec since the most recent birthday
+  const birth = new Date('2009-07-19T00:00:00+07:00');
+
+  function getLastAnniversary(now){
+    let anniv = new Date(birth.getTime());
+    anniv.setFullYear(now.getFullYear());
+    if(anniv.getTime() > now.getTime()){
+      anniv.setFullYear(now.getFullYear() - 1);
+    }
+    return anniv;
+  }
+
   function tick(){
-    const now = Date.now();
-    let diff = Math.max(0, target - now);
+    const now = new Date();
+    const anniv = getLastAnniversary(now);
+    const years = anniv.getFullYear() - birth.getFullYear();
+
+    let diff = now.getTime() - anniv.getTime();
     const d = Math.floor(diff / 86400000); diff -= d*86400000;
     const h = Math.floor(diff / 3600000); diff -= h*3600000;
     const m = Math.floor(diff / 60000); diff -= m*60000;
     const s = Math.floor(diff / 1000);
+
+    document.getElementById('cd-y').textContent = String(years).padStart(2,'0');
     document.getElementById('cd-d').textContent = String(d).padStart(2,'0');
     document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
     document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
